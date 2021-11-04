@@ -6,6 +6,7 @@ set -e
 rm -rf dist
 
 # build
+npm run test
 vite build --base=/solar-svelte/
 
 # navigate into the build output directory

@@ -5,17 +5,22 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 3001",
     "build": "vite build",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "serve": "vite preview --host 127.0.0.1 --port 3001",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
     "@sveltejs/gl": "^0.0.37",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
-    "rollup-plugin-glslify": "^1.2.1",
     "@tsconfig/svelte": "^2.0.1",
+    "@types/jest": "^27.0.2",
+    "jest": "^27.3.1",
+    "rollup-plugin-glslify": "^1.2.1",
     "svelte": "^3.37.0",
     "svelte-check": "^2.1.0",
     "svelte-preprocess": "^4.7.2",
+    "ts-jest": "^27.0.7",
     "tslib": "^2.2.0",
     "typescript": "^4.3.2",
     "vite": "^2.6.4"

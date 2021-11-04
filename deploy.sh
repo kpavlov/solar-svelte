@@ -3,8 +3,10 @@
 # abort on errors
 set -e
 
+rm -rf dist
+
 # build
-npm run build
+vite build --base=/solar-svelte/
 
 # navigate into the build output directory
 cd dist

@@ -2,7 +2,13 @@
     import {onMount} from 'svelte';
     import * as GL from '@sveltejs/gl';
 
-    export let color = '#ff3e00';
+    import {bodies} from "./lib/bodies.ts";
+    import {positions} from "./lib/positions.mjs";
+
+    console.log(bodies)
+    console.log(positions)
+
+    export let color = '#1aea33';
     let w = 1;
     let h = 1;
     let d = 1;

@@ -2,8 +2,8 @@
     import {onMount} from 'svelte';
     import * as GL from '@sveltejs/gl';
 
-    import {bodies} from "./lib/bodies.ts";
-    import {positions} from "./lib/positions.mjs";
+    import {bodies} from "./lib/bodies";
+    import {positions} from "./lib/positions";
 
     console.log(bodies)
     console.log(positions)

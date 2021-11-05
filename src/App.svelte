@@ -8,14 +8,18 @@
     console.log(bodies)
     console.log(positions)
 
-    export let color = '#1aea33';
-    let w = 1;
-    let h = 1;
-    let d = 1;
+    const planets = bodies.slice(1)
+
+    const sun = bodies[0]
+
+    let scale = 100000;
+    let planetScale = 100;
 
     const from_hex = hex => parseInt(hex.slice(1), 16);
 
+    const spaceColor = from_hex('#070211')
     const light = {};
+    let camLookAt = 'center';
 
     onMount(() => {
         let frame;
@@ -34,49 +38,52 @@
     });
 </script>
 
-<GL.Scene>
-    <GL.Target id="center" location={[0, h/2, 0]}/>
+<GL.Scene background={spaceColor}>
+    <GL.Target id="center" location={[0, 0, 0]}/>
 
-    <GL.OrbitControls maxPolarAngle={Math.PI / 2} let:location>
-        <GL.PerspectiveCamera {location} lookAt="center" near={0.01} far={1000}/>
+    <GL.OrbitControls maxPolarAngle={Math.PI/2} let:location>
+        <GL.PerspectiveCamera {location} lookAt={camLookAt} near={1} far={10000}/>
     </GL.OrbitControls>
 
-    <GL.AmbientLight intensity={0.3}/>
+    <GL.AmbientLight intensity={0.5}/>
     <GL.DirectionalLight direction={[-1,-1,-1]} intensity={0.5}/>
 
-    <!-- floor -->
-    <GL.Mesh
-            geometry={GL.plane()}
-            location={[0,-0.01,0]}
-            rotation={[-90,0,0]}
-            scale={10}
-            uniforms={{ color: 0xffffff }}
-    />
+    <!-- ecliptic -->
+    <!-- <GL.Mesh
+             geometry={GL.plane()}
+             location={[0,-0.01,0]}
+             rotation={[-90,0,0]}
+             scale={100000}
+             uniforms={{ color: 0xffffff, alpha: 0.01 }}
+     />-->
 
-    <GL.Mesh
-            geometry={GL.box()}
-            location={[0,h/2,0]}
-            rotation={[0,-20,0]}
-            scale={[w,h,d]}
-            uniforms={{ color: from_hex(color) }}
-    />
+    <!-- Sun -->
+    <GL.Group location={[0,0,0]}>
+        <GL.Mesh
+                geometry={GL.sphere({ turns: 36, bands: 36 })}
+                location={[0,0,0]}
+                scale={sun.radius/scale}
+                uniforms={{ color: from_hex(sun.color), emissive: 0xcccc99 }}
+        />
+        <GL.PointLight
+                location={[0,0,0]}
+                color={from_hex(sun.color)}
+                intensity={200}
+        />
+    </GL.Group>
 
     <!-- spheres -->
-    <GL.Mesh
-            geometry={GL.sphere({ turns: 36, bands: 36 })}
-            location={[-0.5, 0.4, 1.2]}
-            scale={0.4}
-            uniforms={{ color: 0x123456, alpha: 0.9 }}
-            transparent
-    />
-
-    <GL.Mesh
-            geometry={GL.sphere({ turns: 36, bands: 36 })}
-            location={[-1.4, 0.6, 0.2]}
-            scale={0.6}
-            uniforms={{ color: 0x336644, alpha: 0.9 }}
-            transparent
-    />
+    {#each planets as {id, name, color, radius}, i}
+        <GL.Target id={id}
+                   location={[positions[id].location[0]/scale, positions[id].location[1]/scale, positions[id].location[2]/scale]}/>
+        <GL.Mesh
+                geometry={GL.sphere({ turns: 36, bands: 36 })}
+                location={[positions[id].location[0]/scale, positions[id].location[1]/scale, positions[id].location[2]/scale]}
+                scale={radius/scale*planetScale}
+                uniforms={{ color: from_hex(color), alpha: 1 }}
+                transparent
+        />
+    {/each}
 
     <!-- moving light -->
     <GL.Group location={[light.x,light.y,light.z]}>
@@ -96,30 +103,36 @@
 </GL.Scene>
 
 <div class="controls">
+
     <label>
-        <input type="color" style="height: 40px" bind:value={color}>
+        <input type="range" bind:value={scale} min={1000} max={1000000} step={1}> Scene Scale ({scale})
+    </label>
+    <label>
+        <input type="range" bind:value={planetScale} min={1} max={200} step={1}> Planet Zoom ({planetScale})
     </label>
 
     <label>
-        <input type="range" bind:value={w} min={0.1} max={5} step={0.1}> width ({w})
-    </label>
-
-    <label>
-        <input type="range" bind:value={h} min={0.1} max={5} step={0.1}> height ({h})
-    </label>
-
-    <label>
-        <input type="range" bind:value={d} min={0.1} max={5} step={0.1}> depth ({d})
+        Camera looking at
+        <select bind:value={camLookAt}>
+            <option value="center">Sun</option>
+            {#each planets as {id, name}, i}
+                <option value={id}>{name}</option>
+            {/each}
+        </select>
     </label>
 </div>
 
 <style>
     .controls {
         position: absolute;
-        top: 1em;
+        bottom: 1em;
         left: 1em;
         background-color: rgba(255, 255, 255, 0.7);
         padding: 1em;
         border-radius: 2px;
+    }
+
+    label {
+        padding-left: 5em;
     }
 </style>

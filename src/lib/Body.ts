@@ -2,12 +2,12 @@ export class Body {
     readonly id: string
     readonly name: string
     readonly radius: number
-    readonly color: number
+    readonly color: string
 
     constructor(id: string,
                 name: string,
                 radius: number,
-                color: number) {
+                color: string) {
         this.id = id
         this.name = name
         this.radius = radius

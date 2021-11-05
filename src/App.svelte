@@ -12,7 +12,9 @@
 
     const sun = bodies[0]
 
-    let scale = 100000;
+    let scale = 500000;
+    let camera = {};
+    let cameraLocation = {};
     let planetScale = 100;
 
     const from_hex = hex => parseInt(hex.slice(1), 16);
@@ -41,8 +43,8 @@
 <GL.Scene background={spaceColor}>
     <GL.Target id="center" location={[0, 0, 0]}/>
 
-    <GL.OrbitControls maxPolarAngle={Math.PI/2} let:location>
-        <GL.PerspectiveCamera {location} lookAt={camLookAt} near={1} far={10000}/>
+    <GL.OrbitControls maxPolarAngle={Math.PI} let:location>
+        <GL.PerspectiveCamera {location} lookAt={camLookAt} near={1} far={10000} bind:camera/>
     </GL.OrbitControls>
 
     <GL.AmbientLight intensity={0.5}/>
@@ -68,7 +70,7 @@
         <GL.PointLight
                 location={[0,0,0]}
                 color={from_hex(sun.color)}
-                intensity={200}
+                intensity={10}
         />
     </GL.Group>
 

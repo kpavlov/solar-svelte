@@ -2,6 +2,12 @@
   "name": "solar-svelte",
   "version": "0.0.1",
   "type": "module",
+  "author": "Konstantin Pavlov",
+  "description": "Model of Solar System in svelte/gl",
+  "repository": {
+    "type": "GitHub",
+    "url": "https://github.com/kpavlov/solar-svelte"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 3001",
     "build": "vite build",

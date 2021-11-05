@@ -1,3 +1,5 @@
+[![CodeQL](https://github.com/kpavlov/solar-svelte/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/kpavlov/solar-svelte/actions/workflows/codeql-analysis.yml)
+
 # Solar System + Svelte + TS + Vite
 
 This template should help get you started developing with Svelte and TypeScript in Vite.

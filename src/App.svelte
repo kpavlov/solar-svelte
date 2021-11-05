@@ -4,6 +4,7 @@
 
     import {bodies} from "./lib/bodies";
     import {positions} from "./lib/positions";
+    import GithubLink from "./GithubLink.svelte";
 
     console.log(bodies)
     console.log(positions)
@@ -12,6 +13,7 @@
 
     const sun = bodies[0]
 
+    let showEcliptic = true
     let scale = 500000;
     let camera = {};
     let cameraLocation = {};
@@ -21,7 +23,7 @@
 
     const spaceColor = from_hex('#070211')
     const light = {};
-    let camLookAt = 'center';
+    let camLookAt = 'sol';
 
     onMount(() => {
         let frame;
@@ -41,23 +43,26 @@
 </script>
 
 <GL.Scene background={spaceColor}>
-    <GL.Target id="center" location={[0, 0, 0]}/>
+    <GL.Target id="sol" location={positions.sol.location}/>
 
-    <GL.OrbitControls maxPolarAngle={Math.PI} let:location>
-        <GL.PerspectiveCamera {location} lookAt={camLookAt} near={1} far={10000} bind:camera/>
+    <GL.OrbitControls maxPolarAngle={3*Math.PI/4} let:location>
+        <GL.PerspectiveCamera {location} lookAt={camLookAt} near={3} far={10000} bind:camera/>
     </GL.OrbitControls>
 
     <GL.AmbientLight intensity={0.5}/>
-    <GL.DirectionalLight direction={[-1,-1,-1]} intensity={0.5}/>
+    <!--    <GL.DirectionalLight direction={[-1,-1,-1]} intensity={0.2}/>-->
 
     <!-- ecliptic -->
-    <!-- <GL.Mesh
-             geometry={GL.plane()}
-             location={[0,-0.01,0]}
-             rotation={[-90,0,0]}
-             scale={100000}
-             uniforms={{ color: 0xffffff, alpha: 0.01 }}
-     />-->
+    {#if showEcliptic}
+        <GL.Mesh
+                geometry={GL.plane()}
+                location={[0,0.0,0]}
+                rotation={[-90,0,0]}
+                scale={100*scale}
+                uniforms={{ color: 0xc0c0c0, alpha: 0.2 }}
+                transparent
+        />
+    {/if}
 
     <!-- Sun -->
     <GL.Group location={[0,0,0]}>
@@ -112,11 +117,14 @@
     <label>
         <input type="range" bind:value={planetScale} min={1} max={200} step={1}> Planet Zoom ({planetScale})
     </label>
+    <label>
+        <input type=checkbox bind:checked={showEcliptic}> Ecliptic
+    </label>
 
     <label>
         Camera looking at
         <select bind:value={camLookAt}>
-            <option value="center">Sun</option>
+            <option value="sol">Sun</option>
             {#each planets as {id, name}, i}
                 <option value={id}>{name}</option>
             {/each}
@@ -124,17 +132,17 @@
     </label>
 </div>
 
+<GithubLink user="kpavlov" repo="solar-svelte"/>
+
 <style>
     .controls {
-        position: absolute;
         bottom: 1em;
         left: 1em;
-        background-color: rgba(255, 255, 255, 0.7);
         padding: 1em;
-        border-radius: 2px;
     }
 
     label {
-        padding-left: 5em;
+        padding-left: 2em;
     }
+
 </style>
